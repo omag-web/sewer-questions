@@ -74,23 +74,6 @@
   .progress-ring-wrap.complete svg.ring{opacity:0}
   .progress-ring-wrap.complete .ring-figures .small{color:var(--navy);font-weight:700}
 
-  .quick-nav{
-    display:flex;gap:8px;overflow-x:auto;padding:14px 20px 0;
-    max-width:1080px;margin:0 auto;scrollbar-width:thin;
-  }
-  .quick-nav::-webkit-scrollbar{height:5px}
-  .quick-nav::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-  .nav-chip{
-    flex-shrink:0;display:flex;align-items:center;gap:6px;
-    border:1px solid var(--line);background:var(--surface);color:var(--muted);
-    border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;
-    cursor:pointer;font-family:inherit;white-space:nowrap;transition:border-color .15s ease, color .15s ease;
-  }
-  .nav-chip:hover{border-color:#c7ccd2;color:var(--ink)}
-  .nav-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--ring-track);flex-shrink:0}
-  .nav-chip.complete{border-color:var(--navy-tint);background:var(--navy-tint);color:var(--navy-dark)}
-  .nav-chip.complete .dot{background:var(--navy)}
-
   .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
   .btn{
     appearance:none;border:1px solid var(--line);cursor:pointer;font-weight:600;
@@ -206,7 +189,7 @@
   @media print{
     body{background:#fff}
     header{position:static;box-shadow:none}
-    .toolbar, .progress-ring-wrap, .quick-nav{display:none!important}
+    .toolbar, .progress-ring-wrap{display:none!important}
     main{padding:0 12px}
     article.card{box-shadow:none;border-color:#ccc;break-inside:avoid;margin-bottom:10px}
     details{display:block!important}
@@ -253,8 +236,6 @@
         </div>
       </div>
     </div>
-
-    <nav class="quick-nav" id="quickNav" aria-label="Jump to section"></nav>
 
     <div class="toolbar">
       <button class="btn" id="expandAll" type="button">Expand all</button>
@@ -329,10 +310,9 @@
 
   const grid=document.getElementById('grid');
   const tpl=document.getElementById('sectionTpl');
-  const quickNav=document.getElementById('quickNav');
   const RING_CIRCUMFERENCE=138.2;
   let total=0;
-  const sectionEls=[]; // {card, details, bar, countEl, navChip, navDot, rows}
+  const sectionEls=[]; // {card, details, bar, countEl, rows}
 
   const FLAG_SVG='<svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 3v18M5 4h11l-2.5 4L16 12H5"/></svg>';
 
@@ -424,19 +404,7 @@
 
     grid.appendChild(node);
 
-    // Quick-nav chip
-    const chip=document.createElement('button');
-    chip.type='button';
-    chip.className='nav-chip';
-    chip.innerHTML=`<span class="dot"></span><span class="label"></span>`;
-    chip.querySelector('.label').textContent=section.title;
-    chip.addEventListener('click', ()=>{
-      details.open=true;
-      card.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-    quickNav.appendChild(chip);
-
-    const secObj={card,details,bar,countEl,chip,rows};
+    const secObj={card,details,bar,countEl,rows};
     sectionEls.push(secObj);
     updateSection(secObj);
   });
@@ -450,7 +418,6 @@
     sec.countEl.textContent=complete ? 'All complete ✓' : `${checked} of ${n} complete`;
     sec.countEl.classList.toggle('is-complete', complete);
     sec.bar.style.width=(n?Math.round((checked/n)*100):0)+'%';
-    sec.chip.classList.toggle('complete', complete);
   }
 
   function updateOverall(){
