@@ -20,6 +20,9 @@
     --navy-tint:#eaf1f7;
     --gold:#c1932f;
     --gold-tint:#faf3e4;
+    --warn:#b5502e;
+    --warn-tint:#f8ece7;
+    --unsure:#8a94a3;
     --ring-track:#e3e7eb;
     --radius:10px;
     --shadow:0 1px 2px rgba(20,30,45,.06), 0 1px 1px rgba(20,30,45,.04);
@@ -51,6 +54,7 @@
     max-width:1080px;margin:0 auto;
     padding:20px 20px 16px;
   }
+  .logo{height:30px;width:auto;display:block;margin-bottom:14px;filter:invert(1);}
   .eyebrow-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .kicker{color:var(--navy);font-weight:700;font-size:13px;letter-spacing:.01em}
   h1{margin:2px 0 0;font-size:clamp(22px,3.4vw,30px);line-height:1.2;font-weight:800;color:var(--ink)}
@@ -82,7 +86,7 @@
     transition:background .15s ease, border-color .15s ease;
   }
   .btn:hover{border-color:#c7ccd2}
-  .btn:focus-visible, input:focus-visible, summary:focus-visible, .q input:focus-visible{
+  .btn:focus-visible, .ans-btn:focus-visible, .flag-btn:focus-visible, .note-toggle:focus-visible, summary:focus-visible, textarea:focus-visible{
     outline:2px solid var(--navy);outline-offset:2px;
   }
   .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;margin-left:auto}
@@ -120,11 +124,6 @@
   }
   .section-bar > span{display:block;height:100%;background:var(--navy);border-radius:999px;transition:width .25s ease}
 
-  .badge-done{
-    flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--navy);
-    background:var(--navy-tint);border-radius:999px;padding:3px 9px;
-    display:flex;align-items:center;gap:4px;
-  }
   .section-count.is-complete{color:var(--navy);font-weight:700}
 
   .body{padding:2px 18px 16px}
@@ -132,27 +131,28 @@
 
   .q{
     display:flex;gap:12px;align-items:flex-start;padding:11px 8px;
-    border-top:1px solid var(--line-soft);border-radius:8px;cursor:pointer;
+    border-top:1px solid var(--line-soft);border-radius:8px;
     transition:background .15s ease;
   }
-  .q:hover{background:var(--line-soft)}
   li.q:first-child{border-top:none}
   .q.flagged{background:var(--gold-tint)}
-  .q.flagged:hover{background:#f6ecd4}
-  .q input[type="checkbox"]{
-    appearance:none;-webkit-appearance:none;flex-shrink:0;
-    width:19px;height:19px;margin-top:1px;border-radius:5px;
-    border:1.5px solid #b7bec6;background:#fff;cursor:pointer;position:relative;
-    transition:background .15s ease, border-color .15s ease;
+  .q.answer-no{background:var(--warn-tint)}
+
+  .answer-group{display:flex;gap:4px;flex-shrink:0;margin-top:1px}
+  .ans-btn{
+    border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    font-size:12px;font-weight:700;padding:6px 11px;border-radius:6px;
+    cursor:pointer;font-family:inherit;white-space:nowrap;
+    transition:background .15s ease,border-color .15s ease,color .15s ease;
   }
-  .q input[type="checkbox"]:checked{background:var(--navy);border-color:var(--navy)}
-  .q input[type="checkbox"]:checked::after{
-    content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;
-    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(40deg);
-  }
+  .ans-btn:hover{border-color:#c7ccd2;color:var(--ink)}
+  .ans-btn.selected.ans-yes{background:var(--navy);border-color:var(--navy);color:#fff}
+  .ans-btn.selected.ans-no{background:var(--warn);border-color:var(--warn);color:#fff}
+  .ans-btn.selected.ans-unsure{background:var(--unsure);border-color:var(--unsure);color:#fff}
+
   .q-main{flex:1;min-width:0}
-  .q label{cursor:pointer;font-size:14.5px;line-height:1.5;color:var(--ink)}
-  .q.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:#c7ccd2}
+  .q-text{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}
+  .q.answered .q-text{color:var(--muted)}
 
   .note-toggle{
     display:inline-block;margin-top:5px;font-size:12px;font-weight:600;
@@ -190,19 +190,20 @@
     body{background:#fff}
     header{position:static;box-shadow:none}
     .toolbar, .progress-ring-wrap{display:none!important}
+    .logo{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     main{padding:0 12px}
     article.card{box-shadow:none;border-color:#ccc;break-inside:avoid;margin-bottom:10px}
     details{display:block!important}
     details summary{display:flex}
     .chevron{display:none}
     .q{cursor:default}
-    .q:hover{background:none}
     .flag-btn{display:none}
     .note-toggle{display:none}
     .note-box{display:none}
     .note-box.has-note{display:block!important;margin-top:6px}
     .note-box textarea{border-color:#ccc;background:#fafafa}
-    .q input[type="checkbox"]{
+    .ans-btn{border-color:#bbb}
+    .ans-btn.selected{
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
     }
     footer{margin-top:20px}
@@ -213,11 +214,12 @@
 
 <header>
   <div class="header-inner">
+    <img class="logo" src="https://images.squarespace-cdn.com/content/v1/573365789f726693272dc91a/1464015851658-UPPH0RIFUZU3X8ZIDRQT/OMAG+no+Swoosh+inverted.png?format=1500w" alt="OMAG" />
     <div class="eyebrow-row">
       <div>
         <span class="kicker">OMAG Utility Readiness Toolkit</span>
         <h1>Sanitary Sewer System Questionnaire</h1>
-        <p class="subtitle">Work through each section to gauge how prepared your system is — for daily operations and for defending a claim.</p>
+        <p class="subtitle">Work through each section to see how prepared your system is for daily operations — and where the gaps in your risk exposure are.</p>
       </div>
       <div class="progress-ring-wrap" id="ringWrap">
         <div class="ring-outer">
@@ -231,7 +233,7 @@
         </div>
         <div class="ring-figures">
           <span class="big"><span id="countChecked">0</span>/<span id="countTotal">0</span></span>
-          <span class="small" id="ringLabel">complete</span>
+          <span class="small" id="ringLabel">answered</span>
           <span class="flagged-count" id="flaggedCount" hidden></span>
         </div>
       </div>
@@ -285,16 +287,24 @@
     { title: 'City Manager or Mayor as a witness', items: ['Do you get regular updates regarding the sewer system?','Do you get notices when a resident has had a back up?','Do you support a regular maintenance plan?','Do you set aside the appropriate money to make repairs?']}
   ];
 
-  const STORAGE_KEY='omag_sewer_qs_v3';
+  const STORAGE_KEY='omag_sewer_qs_v4';
   let saved={};
   try{
     const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
-    // migrate from v2 (plain booleans) if present and v3 is empty
     if(Object.keys(raw).length){
       saved=raw;
     } else {
-      const old=JSON.parse(localStorage.getItem('omag_sewer_qs_v2')||'{}');
-      Object.keys(old).forEach(id=>{ saved[id]={c:old[id]===true,f:false,n:''}; });
+      // migrate from v3 (checked/flag/note, no explicit "no" state)
+      const v3=JSON.parse(localStorage.getItem('omag_sewer_qs_v3')||'{}');
+      if(Object.keys(v3).length){
+        Object.keys(v3).forEach(id=>{
+          saved[id]={a: v3[id].c ? 'yes' : null, f: !!v3[id].f, n: v3[id].n||''};
+        });
+      } else {
+        // migrate from v2 (plain booleans)
+        const v2=JSON.parse(localStorage.getItem('omag_sewer_qs_v2')||'{}');
+        Object.keys(v2).forEach(id=>{ saved[id]={a: v2[id]===true ? 'yes':null, f:false, n:''}; });
+      }
     }
   }catch(e){ saved={}; }
 
@@ -302,7 +312,7 @@
     try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(saved)); }catch(e){}
   }
   function entry(id){
-    if(!saved[id]) saved[id]={c:false,f:false,n:''};
+    if(!saved[id]) saved[id]={a:null,f:false,n:''};
     return saved[id];
   }
 
@@ -315,6 +325,7 @@
   const sectionEls=[]; // {card, details, bar, countEl, rows}
 
   const FLAG_SVG='<svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 3v18M5 4h11l-2.5 4L16 12H5"/></svg>';
+  const ANSWERS=[['yes','Yes'],['no','No'],['unsure','Not sure']];
 
   DATA.forEach((section,sIdx)=>{
     const node=tpl.content.cloneNode(true);
@@ -335,61 +346,63 @@
       const e=entry(id);
       const li=document.createElement('li');
       li.className='q';
+      const ansBtnsHtml=ANSWERS.map(([val,lbl])=>
+        `<button type="button" class="ans-btn ans-${val}" data-val="${val}" aria-pressed="false">${lbl}</button>`
+      ).join('');
       li.innerHTML=
-        `<input type="checkbox" id="${id}">`+
+        `<div class="answer-group" role="group" aria-label="Answer">${ansBtnsHtml}</div>`+
         `<div class="q-main">`+
-          `<label for="${id}"></label>`+
+          `<p class="q-text"></p>`+
           `<button type="button" class="note-toggle">+ Add note</button>`+
           `<div class="note-box"><textarea placeholder="Details, who's responsible, follow-up..."></textarea></div>`+
         `</div>`+
         `<button type="button" class="flag-btn" title="Flag for follow-up" aria-pressed="false">${FLAG_SVG}</button>`;
-      li.querySelector('label').textContent=q;
-      const cb=li.querySelector('input');
+      li.querySelector('.q-text').textContent=q;
+      const ansBtns=[...li.querySelectorAll('.ans-btn')];
       const flagBtn=li.querySelector('.flag-btn');
       const noteToggle=li.querySelector('.note-toggle');
       const noteBox=li.querySelector('.note-box');
       const textarea=li.querySelector('textarea');
 
-      cb.checked=e.c;
-      li.classList.toggle('done', e.c);
+      function paintAnswer(){
+        ansBtns.forEach(b=>{
+          const sel=b.dataset.val===e.a;
+          b.classList.toggle('selected', sel);
+          b.setAttribute('aria-pressed', sel ? 'true':'false');
+        });
+        li.classList.toggle('answered', e.a!=null);
+        li.classList.toggle('answer-no', e.a==='no');
+      }
+      paintAnswer();
       flagBtn.classList.toggle('active', e.f);
       flagBtn.setAttribute('aria-pressed', e.f ? 'true':'false');
+      li.classList.toggle('flagged', e.f);
       textarea.value=e.n||'';
       if(e.n){ noteToggle.textContent='Note'; noteToggle.classList.add('has-note'); noteBox.classList.add('open','has-note'); }
 
-      // Checkbox 'change' is the single source of truth for check state,
-      // whether triggered by the checkbox itself, its label, or a row click below.
-      cb.addEventListener('change', ()=>{
-        e.c=cb.checked; persist();
-        li.classList.toggle('done', cb.checked);
-        updateSection(secObj);
-        updateOverall();
+      ansBtns.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const val=btn.dataset.val;
+          e.a = (e.a===val) ? null : val; // click again to clear
+          persist();
+          paintAnswer();
+          updateSection(secObj);
+          updateOverall();
+        });
       });
 
-      // Clicking anywhere on the row (but not an already-interactive control)
-      // toggles the checkbox via its native click, so label/checkbox behavior
-      // and this shortcut never fight each other.
-      li.addEventListener('click', ev=>{
-        if(ev.target.closest('label, input, .flag-btn, .note-toggle, .note-box')) return;
-        cb.click();
-      });
-
-      flagBtn.addEventListener('click', ev=>{
-        ev.stopPropagation();
+      flagBtn.addEventListener('click', ()=>{
         e.f=!e.f; persist();
         flagBtn.classList.toggle('active', e.f);
         flagBtn.setAttribute('aria-pressed', e.f ? 'true':'false');
         li.classList.toggle('flagged', e.f);
         updateOverall();
       });
-      li.classList.toggle('flagged', e.f);
 
-      noteToggle.addEventListener('click', ev=>{
-        ev.stopPropagation();
+      noteToggle.addEventListener('click', ()=>{
         noteBox.classList.toggle('open');
         if(noteBox.classList.contains('open')) textarea.focus();
       });
-      textarea.addEventListener('click', ev=>ev.stopPropagation());
       textarea.addEventListener('input', ()=>{
         e.n=textarea.value; persist();
         const has=!!e.n.trim();
@@ -399,7 +412,7 @@
       });
 
       list.appendChild(li);
-      rows.push({li,cb});
+      rows.push({li,e});
     });
 
     grid.appendChild(node);
@@ -412,30 +425,35 @@
   document.getElementById('countTotal').textContent=total;
 
   function updateSection(sec){
-    const checked=sec.rows.filter(r=>r.cb.checked).length;
+    const answered=sec.rows.filter(r=>r.e.a!=null).length;
     const n=sec.rows.length;
-    const complete=n>0 && checked===n;
-    sec.countEl.textContent=complete ? 'All complete ✓' : `${checked} of ${n} complete`;
+    const complete=n>0 && answered===n;
+    sec.countEl.textContent=complete ? 'All answered ✓' : `${answered} of ${n} answered`;
     sec.countEl.classList.toggle('is-complete', complete);
-    sec.bar.style.width=(n?Math.round((checked/n)*100):0)+'%';
+    sec.bar.style.width=(n?Math.round((answered/n)*100):0)+'%';
   }
 
   function updateOverall(){
-    const checked=sectionEls.reduce((sum,s)=>sum+s.rows.filter(r=>r.cb.checked).length,0);
-    document.getElementById('countChecked').textContent=checked;
-    const pct=total?checked/total:0;
+    const answered=sectionEls.reduce((sum,s)=>sum+s.rows.filter(r=>r.e.a!=null).length,0);
+    document.getElementById('countChecked').textContent=answered;
+    const pct=total?answered/total:0;
     document.getElementById('ringFill').style.strokeDashoffset=(RING_CIRCUMFERENCE*(1-pct)).toFixed(1);
 
     const ringWrap=document.getElementById('ringWrap');
-    const complete = total>0 && checked===total;
+    const complete = total>0 && answered===total;
     ringWrap.classList.toggle('complete', complete);
-    document.getElementById('ringLabel').textContent = complete ? 'all complete' : 'complete';
+    document.getElementById('ringLabel').textContent = complete ? 'all answered' : 'answered';
 
-    const flaggedTotal=Object.keys(saved).filter(id=>saved[id].f).length;
+    const values=Object.values(saved);
+    const noTotal=values.filter(v=>v.a==='no').length;
+    const flaggedTotal=values.filter(v=>v.f).length;
+    const parts=[];
+    if(noTotal>0) parts.push(`${noTotal} marked no`);
+    if(flaggedTotal>0) parts.push(`${flaggedTotal} flagged`);
     const flagEl=document.getElementById('flaggedCount');
-    if(flaggedTotal>0){
+    if(parts.length){
       flagEl.hidden=false;
-      flagEl.textContent=`${flaggedTotal} flagged`;
+      flagEl.textContent=parts.join(' · ');
     } else {
       flagEl.hidden=true;
     }
@@ -452,15 +470,16 @@
 
   // ---- Reset ----
   document.getElementById('resetAll').addEventListener('click',()=>{
-    if(!confirm('Clear all checked answers, flags, and notes? This cannot be undone.')) return;
-    saved={};
-    persist();
+    if(!confirm('Clear all answers, flags, and notes? This cannot be undone.')) return;
     sectionEls.forEach(sec=>{
       sec.rows.forEach(r=>{
-        r.cb.checked=false;
-        r.li.classList.remove('done','flagged');
-        r.li.querySelector('.flag-btn').classList.remove('active');
-        r.li.querySelector('.flag-btn').setAttribute('aria-pressed','false');
+        r.e.a=null; r.e.f=false; r.e.n='';
+        r.li.querySelectorAll('.ans-btn').forEach(b=>{
+          b.classList.remove('selected'); b.setAttribute('aria-pressed','false');
+        });
+        r.li.classList.remove('answered','answer-no','flagged');
+        const flagBtn=r.li.querySelector('.flag-btn');
+        flagBtn.classList.remove('active'); flagBtn.setAttribute('aria-pressed','false');
         const noteToggle=r.li.querySelector('.note-toggle');
         const noteBox=r.li.querySelector('.note-box');
         r.li.querySelector('textarea').value='';
@@ -470,6 +489,7 @@
       });
       updateSection(sec);
     });
+    persist();
     updateOverall();
   });
 
