@@ -46,7 +46,6 @@
 
   /* ---------- Header ---------- */
   header{
-    position:sticky;top:0;z-index:20;
     background:var(--surface);
     border-bottom:1px solid var(--line);
   }
@@ -95,7 +94,30 @@
   .btn.primary:hover{background:var(--navy-dark);border-color:var(--navy-dark)}
   .btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
   .btn.ghost:hover{color:var(--ink);background:var(--line-soft)}
+  .btn.danger{background:var(--warn);border-color:var(--warn);color:#fff}
+  .btn.danger:hover{background:#9c4326;border-color:#9c4326}
   .btn svg{vertical-align:-3px;margin-right:6px}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(20,30,45,.5);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;z-index:100;animation:fadeIn .15s ease;
+  }
+  .modal-overlay[hidden]{display:none}
+  .modal-box{
+    background:var(--surface);border-radius:12px;padding:22px 24px;
+    max-width:380px;width:100%;box-shadow:0 12px 32px rgba(20,30,45,.25);
+    animation:popIn .15s ease;
+  }
+  .modal-box h3{margin:0 0 8px;font-size:17px;font-weight:800;color:var(--ink)}
+  .modal-box p{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){
+    .modal-overlay, .modal-box{animation:none}
+  }
 
   /* ---------- Main ---------- */
   main{padding:24px 20px 60px}
@@ -208,6 +230,7 @@
     body{background:#fff}
     header{position:static;box-shadow:none}
     .toolbar, .progress-ring-wrap{display:none!important}
+    .modal-overlay{display:none!important}
     .logo{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .review-inner{border-left-color:#999;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
     main{padding:0 12px}
@@ -300,6 +323,17 @@
     </details>
   </article>
 </template>
+
+<div class="modal-overlay" id="resetModal" hidden>
+  <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="resetModalTitle" aria-describedby="resetModalDesc">
+    <h3 id="resetModalTitle">Reset progress?</h3>
+    <p id="resetModalDesc">This clears every answer, flag, and note on this page. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn" id="resetCancel" type="button">Cancel</button>
+      <button class="btn danger" id="resetConfirm" type="button">Reset progress</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -538,8 +572,30 @@
   });
 
   // ---- Reset ----
-  document.getElementById('resetAll').addEventListener('click',()=>{
-    if(!confirm('Clear all answers, flags, and notes? This cannot be undone.')) return;
+  const resetModal=document.getElementById('resetModal');
+  const resetCancel=document.getElementById('resetCancel');
+  const resetConfirm=document.getElementById('resetConfirm');
+  let resetPrevFocus=null;
+
+  function openResetModal(){
+    resetPrevFocus=document.activeElement;
+    resetModal.hidden=false;
+    resetConfirm.focus();
+  }
+  function closeResetModal(){
+    resetModal.hidden=true;
+    if(resetPrevFocus) resetPrevFocus.focus();
+  }
+
+  document.getElementById('resetAll').addEventListener('click', openResetModal);
+  resetCancel.addEventListener('click', closeResetModal);
+  resetModal.addEventListener('click', ev=>{ if(ev.target===resetModal) closeResetModal(); });
+  document.addEventListener('keydown', ev=>{
+    if(ev.key==='Escape' && !resetModal.hidden) closeResetModal();
+  });
+
+  resetConfirm.addEventListener('click', ()=>{
+    closeResetModal();
     sectionEls.forEach(sec=>{
       sec.rows.forEach(r=>{
         r.e.a=null; r.e.f=false; r.e.n='';
