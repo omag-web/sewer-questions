@@ -194,6 +194,7 @@
     background:var(--bg);
   }
   .note-box textarea:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .note-print{display:none}
 
   .flag-btn{
     flex-shrink:0;border:none;background:none;padding:2px;cursor:pointer;
@@ -243,7 +244,11 @@
     .note-toggle{display:none}
     .note-box{display:none}
     .note-box.has-note{display:block!important;margin-top:6px}
-    .note-box textarea{border-color:#ccc;background:#fafafa}
+    .note-box textarea{display:none}
+    .note-print{
+      display:block;white-space:pre-wrap;font-size:13.5px;color:var(--ink);
+      border:1px solid #ccc;background:#fafafa;border-radius:8px;padding:8px 10px;
+    }
     .ans-btn{border-color:#bbb}
     .ans-btn.selected{
       -webkit-print-color-adjust:exact;print-color-adjust:exact;
@@ -416,7 +421,7 @@
         `<div class="q-main">`+
           `<p class="q-text"></p>`+
           `<button type="button" class="note-toggle">+ Add note</button>`+
-          `<div class="note-box"><textarea placeholder="Details, who's responsible, follow-up..."></textarea></div>`+
+          `<div class="note-box"><textarea placeholder="Details, who's responsible, follow-up..."></textarea><div class="note-print" aria-hidden="true"></div></div>`+
         `</div>`+
         `<button type="button" class="flag-btn" title="Flag for follow-up" aria-pressed="false">${FLAG_SVG}</button>`;
       li.querySelector('.q-text').textContent=q;
@@ -425,6 +430,7 @@
       const noteToggle=li.querySelector('.note-toggle');
       const noteBox=li.querySelector('.note-box');
       const textarea=li.querySelector('textarea');
+      const notePrint=li.querySelector('.note-print');
 
       function paintAnswer(){
         ansBtns.forEach(b=>{
@@ -440,6 +446,7 @@
       flagBtn.setAttribute('aria-pressed', e.f ? 'true':'false');
       li.classList.toggle('flagged', e.f);
       textarea.value=e.n||'';
+      notePrint.textContent=e.n||'';
       if(e.n){ noteToggle.textContent='Note'; noteToggle.classList.add('has-note'); noteBox.classList.add('open','has-note'); }
 
       ansBtns.forEach(btn=>{
@@ -468,6 +475,7 @@
       });
       textarea.addEventListener('input', ()=>{
         e.n=textarea.value; persist();
+        notePrint.textContent=e.n;
         const has=!!e.n.trim();
         noteToggle.textContent=has ? 'Note' : '+ Add note';
         noteToggle.classList.toggle('has-note', has);
@@ -608,6 +616,7 @@
         const noteToggle=r.li.querySelector('.note-toggle');
         const noteBox=r.li.querySelector('.note-box');
         r.li.querySelector('textarea').value='';
+        r.li.querySelector('.note-print').textContent='';
         noteToggle.textContent='+ Add note';
         noteToggle.classList.remove('has-note');
         noteBox.classList.remove('open','has-note');
