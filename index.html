@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sanitary Sewer System Questionnaire | OMAG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f4f6;
+    --surface:#ffffff;
+    --ink:#1c232c;
+    --muted:#606b78;
+    --line:#dfe3e8;
+    --line-soft:#eceff2;
+    --navy:#2c5680;
+    --navy-dark:#1d3e5c;
+    --navy-tint:#eaf1f7;
+    --gold:#c1932f;
+    --gold-tint:#faf3e4;
+    --ring-track:#e3e7eb;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(20,30,45,.06), 0 1px 1px rgba(20,30,45,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    /* Intentionally left light: this is a printed/shared compliance doc, consistency matters more than theme-matching. */
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+  body{
+    margin:0;
+    font-family:'Public Sans',system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+  }
+  a{color:var(--navy)}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:20;
+    background:var(--surface);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1080px;margin:0 auto;
+    padding:20px 20px 16px;
+  }
+  .eyebrow-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .kicker{color:var(--navy);font-weight:700;font-size:13px;letter-spacing:.01em}
+  h1{margin:2px 0 0;font-size:clamp(22px,3.4vw,30px);line-height:1.2;font-weight:800;color:var(--ink)}
+  .subtitle{margin:4px 0 0;color:var(--muted);font-size:14.5px;max-width:56ch}
+
+  .progress-ring-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .ring-figures{text-align:right}
+  .ring-figures .big{display:block;font-size:20px;font-weight:800;color:var(--navy-dark);line-height:1.1}
+  .ring-figures .small{display:block;font-size:12.5px;color:var(--muted)}
+  .ring-figures .flagged-count{display:block;font-size:12px;color:var(--gold);font-weight:700;margin-top:1px}
+  .ring-outer{position:relative;width:52px;height:52px;flex-shrink:0}
+  svg.ring{transform:rotate(-90deg)}
+  svg.ring circle{fill:none;stroke-width:6}
+  svg.ring .track{stroke:var(--ring-track)}
+  svg.ring .fill{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset .35s ease}
+  .ring-check{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--navy);opacity:0;transform:scale(.6);transition:opacity .25s ease, transform .25s ease;
+  }
+  .progress-ring-wrap.complete .ring-check{opacity:1;transform:scale(1)}
+  .progress-ring-wrap.complete svg.ring{opacity:0}
+  .progress-ring-wrap.complete .ring-figures .small{color:var(--navy);font-weight:700}
+
+  .quick-nav{
+    display:flex;gap:8px;overflow-x:auto;padding:14px 20px 0;
+    max-width:1080px;margin:0 auto;scrollbar-width:thin;
+  }
+  .quick-nav::-webkit-scrollbar{height:5px}
+  .quick-nav::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .nav-chip{
+    flex-shrink:0;display:flex;align-items:center;gap:6px;
+    border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;
+    cursor:pointer;font-family:inherit;white-space:nowrap;transition:border-color .15s ease, color .15s ease;
+  }
+  .nav-chip:hover{border-color:#c7ccd2;color:var(--ink)}
+  .nav-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--ring-track);flex-shrink:0}
+  .nav-chip.complete{border-color:var(--navy-tint);background:var(--navy-tint);color:var(--navy-dark)}
+  .nav-chip.complete .dot{background:var(--navy)}
+
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+  .btn{
+    appearance:none;border:1px solid var(--line);cursor:pointer;font-weight:600;
+    border-radius:var(--radius);padding:9px 14px;background:var(--surface);color:var(--ink);
+    font-size:14px;font-family:inherit;white-space:nowrap;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .btn:hover{border-color:#c7ccd2}
+  .btn:focus-visible, input:focus-visible, summary:focus-visible, .q input:focus-visible{
+    outline:2px solid var(--navy);outline-offset:2px;
+  }
+  .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;margin-left:auto}
+  .btn.primary:hover{background:var(--navy-dark);border-color:var(--navy-dark)}
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+  .btn.ghost:hover{color:var(--ink);background:var(--line-soft)}
+  .btn svg{vertical-align:-3px;margin-right:6px}
+
+  /* ---------- Main ---------- */
+  main{padding:24px 20px 60px}
+  .grid{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+  article.card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--shadow);
+  }
+  details summary{list-style:none;cursor:pointer;}
+  details summary::-webkit-details-marker{display:none}
+
+  summary.section-head{
+    display:flex;align-items:center;gap:14px;padding:16px 18px;
+  }
+  .chevron{
+    flex-shrink:0;color:var(--muted);transition:transform .2s ease;
+  }
+  details[open] .chevron{transform:rotate(90deg)}
+
+  .section-titlewrap{flex:1;min-width:0}
+  .section-title{margin:0;font-size:16.5px;font-weight:700;color:var(--ink)}
+  .section-count{margin-top:2px;font-size:12.5px;color:var(--muted)}
+
+  .section-bar{
+    width:76px;height:6px;border-radius:999px;background:var(--ring-track);
+    overflow:hidden;flex-shrink:0;
+  }
+  .section-bar > span{display:block;height:100%;background:var(--navy);border-radius:999px;transition:width .25s ease}
+
+  .badge-done{
+    flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--navy);
+    background:var(--navy-tint);border-radius:999px;padding:3px 9px;
+    display:flex;align-items:center;gap:4px;
+  }
+  .section-count.is-complete{color:var(--navy);font-weight:700}
+
+  .body{padding:2px 18px 16px}
+  ul.qs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+
+  .q{
+    display:flex;gap:12px;align-items:flex-start;padding:11px 8px;
+    border-top:1px solid var(--line-soft);border-radius:8px;cursor:pointer;
+    transition:background .15s ease;
+  }
+  .q:hover{background:var(--line-soft)}
+  li.q:first-child{border-top:none}
+  .q.flagged{background:var(--gold-tint)}
+  .q.flagged:hover{background:#f6ecd4}
+  .q input[type="checkbox"]{
+    appearance:none;-webkit-appearance:none;flex-shrink:0;
+    width:19px;height:19px;margin-top:1px;border-radius:5px;
+    border:1.5px solid #b7bec6;background:#fff;cursor:pointer;position:relative;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .q input[type="checkbox"]:checked{background:var(--navy);border-color:var(--navy)}
+  .q input[type="checkbox"]:checked::after{
+    content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(40deg);
+  }
+  .q-main{flex:1;min-width:0}
+  .q label{cursor:pointer;font-size:14.5px;line-height:1.5;color:var(--ink)}
+  .q.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:#c7ccd2}
+
+  .note-toggle{
+    display:inline-block;margin-top:5px;font-size:12px;font-weight:600;
+    color:var(--muted);background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
+  }
+  .note-toggle:hover{color:var(--navy)}
+  .note-toggle.has-note{color:var(--navy)}
+  .note-box{
+    display:none;margin-top:8px;
+  }
+  .note-box.open{display:block}
+  .note-box textarea{
+    width:100%;min-height:56px;resize:vertical;font-family:inherit;font-size:13.5px;
+    border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink);
+    background:var(--bg);
+  }
+  .note-box textarea:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+
+  .flag-btn{
+    flex-shrink:0;border:none;background:none;padding:2px;cursor:pointer;
+    color:#c7ccd2;display:flex;align-items:center;margin-top:1px;
+  }
+  .flag-btn:hover{color:var(--gold)}
+  .flag-btn.active{color:var(--gold)}
+  .flag-btn svg{fill:currentColor;stroke:none}
+  .flag-btn:not(.active) svg{fill:none;stroke:currentColor;stroke-width:2}
+
+  footer{
+    max-width:1080px;margin:8px auto 60px;text-align:center;color:var(--muted);
+    padding:0 20px;font-size:13px;line-height:1.6;
+  }
+
+  /* ---------- Print ---------- */
+  @media print{
+    body{background:#fff}
+    header{position:static;box-shadow:none}
+    .toolbar, .progress-ring-wrap, .quick-nav{display:none!important}
+    main{padding:0 12px}
+    article.card{box-shadow:none;border-color:#ccc;break-inside:avoid;margin-bottom:10px}
+    details{display:block!important}
+    details summary{display:flex}
+    .chevron{display:none}
+    .q{cursor:default}
+    .q:hover{background:none}
+    .flag-btn{display:none}
+    .note-toggle{display:none}
+    .note-box{display:none}
+    .note-box.has-note{display:block!important;margin-top:6px}
+    .note-box textarea{border-color:#ccc;background:#fafafa}
+    .q input[type="checkbox"]{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    footer{margin-top:20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow-row">
+      <div>
+        <span class="kicker">OMAG Utility Readiness Toolkit</span>
+        <h1>Sanitary Sewer System Questionnaire</h1>
+        <p class="subtitle">Work through each section to gauge how prepared your system is — for daily operations and for defending a claim.</p>
+      </div>
+      <div class="progress-ring-wrap" id="ringWrap">
+        <div class="ring-outer">
+          <svg class="ring" width="52" height="52" viewBox="0 0 52 52" aria-hidden="true">
+            <circle class="track" cx="26" cy="26" r="22"></circle>
+            <circle class="fill" id="ringFill" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="138.2"></circle>
+          </svg>
+          <div class="ring-check" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="ring-figures">
+          <span class="big"><span id="countChecked">0</span>/<span id="countTotal">0</span></span>
+          <span class="small" id="ringLabel">complete</span>
+          <span class="flagged-count" id="flaggedCount" hidden></span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="quick-nav" id="quickNav" aria-label="Jump to section"></nav>
+
+    <div class="toolbar">
+      <button class="btn" id="expandAll" type="button">Expand all</button>
+      <button class="btn" id="collapseAll" type="button">Collapse all</button>
+      <button class="btn ghost" id="resetAll" type="button">Reset progress</button>
+      <button class="btn primary" id="printBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="grid" id="grid"></section>
+</main>
+
+<footer>With exceptional service, we protect public interest by efficiently managing and mitigating risk for Oklahoma municipalities.</footer>
+
+<template id="sectionTpl">
+  <article class="card">
+    <details open>
+      <summary class="section-head">
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg>
+        <div class="section-titlewrap">
+          <h2 class="section-title"></h2>
+          <p class="section-count"></p>
+        </div>
+        <div class="section-bar"><span></span></div>
+      </summary>
+      <div class="body"><ul class="qs"></ul></div>
+    </details>
+  </article>
+</template>
+
+<script>
+(function(){
+  const DATA=[
+    { title: 'Knowledge about the system', items: ['Do you have a map of all your sewer lines?','Do you know how many manholes are in your city?','Do you know where all those manholes are located?','Do you know how many miles of sewer line are in your city?','Do you know what the pipes are made of?','Do you know when those pipes were installed?','Is there a plan in place to repair or replace certain sections of the lines?','Do you know what it costs to repair or replace a line?','Do you know the process of contracting with someone to replace the lines?']},
+    { title: 'DEQ violations', items: ['Have you had DEQ violations?','Do you have a contact at the DEQ that you keep in contact with?','Can you explain the differences and consequences of DEQ violations?','Have you ever appealed a DEQ violation if you did not agree with the violation?','Do you follow up in writing with DEQ once an issue is resolved?']},
+    { title: 'Maintenance', items: ['Do you have a policy that requires routine system maintenance?','Do you perform maintenance regularly?','What does that maintenance consist of?','Do you jet rod regularly?','Do you treat for grease?','Do you treat for roots?','Do you have a written maintenance protocol?']},
+    { title: 'Paperwork', items: ['How do you keep track of phone calls?','How do you keep track of maintenance?','Do you have a work order system?','Do you document interaction with residents?','How long do you keep related paperwork?','Does the paperwork collect all work performed?','Does the paperwork collect all employees working?','Does the paperwork collect all the tools and materials used for the project?']},
+    { title: 'Equipment', items: ['Does your city have a jet rodder?','Does your city have a camera?','Do you perform periodic smoke tests?','Are employees trained properly on how to use maintenance equipment?','Do you have a plan to replace the equipment over time with newer equipment?']},
+    { title: 'Staff', items: ['Do you keep the City Manager or Mayor and Council apprised of the system and system needs?','Do you train your employees on a regular basis?','Do you train your employees on customer service?','Do you train your employees on the importance of accurate paperwork?']},
+    { title: 'Responding to a call', items: ['Is there a protocol for responding?','Does someone meet with the homeowner to discuss the problem or what is going to happen?','Do you trouble shoot when there is a blockage or just start jet rodding?','Do you follow up with residents when completed?','Do you give the residents some helpful information on who to contact and what to do if there is another problem?','Are you briefed on every back up call?']},
+    { title: 'Requirements of ordinance', items: ['Are you proactive about pop off valves?','Does your city require a back flow device on all structures?','Do you inspect when a new line is put in that attaches to the main?','Do you require a certain material when new lines are attaching to the main?','Are restaurants required to have grease traps?']},
+    { title: 'City Manager or Mayor as a witness', items: ['Do you get regular updates regarding the sewer system?','Do you get notices when a resident has had a back up?','Do you support a regular maintenance plan?','Do you set aside the appropriate money to make repairs?']}
+  ];
+
+  const STORAGE_KEY='omag_sewer_qs_v3';
+  let saved={};
+  try{
+    const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+    // migrate from v2 (plain booleans) if present and v3 is empty
+    if(Object.keys(raw).length){
+      saved=raw;
+    } else {
+      const old=JSON.parse(localStorage.getItem('omag_sewer_qs_v2')||'{}');
+      Object.keys(old).forEach(id=>{ saved[id]={c:old[id]===true,f:false,n:''}; });
+    }
+  }catch(e){ saved={}; }
+
+  function persist(){
+    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(saved)); }catch(e){}
+  }
+  function entry(id){
+    if(!saved[id]) saved[id]={c:false,f:false,n:''};
+    return saved[id];
+  }
+
+  function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')}
+
+  const grid=document.getElementById('grid');
+  const tpl=document.getElementById('sectionTpl');
+  const quickNav=document.getElementById('quickNav');
+  const RING_CIRCUMFERENCE=138.2;
+  let total=0;
+  const sectionEls=[]; // {card, details, bar, countEl, navChip, navDot, rows}
+
+  const FLAG_SVG='<svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 3v18M5 4h11l-2.5 4L16 12H5"/></svg>';
+
+  DATA.forEach((section,sIdx)=>{
+    const node=tpl.content.cloneNode(true);
+    const card=node.querySelector('article.card');
+    const details=node.querySelector('details');
+    const list=node.querySelector('.qs');
+    const bar=node.querySelector('.section-bar > span');
+    const countEl=node.querySelector('.section-count');
+    node.querySelector('.section-title').textContent=section.title;
+    card.id='section-'+slug(section.title);
+
+    const secId=slug(section.title);
+    const rows=[];
+
+    section.items.forEach((q,i)=>{
+      total++;
+      const id=`${secId}-${i}`;
+      const e=entry(id);
+      const li=document.createElement('li');
+      li.className='q';
+      li.innerHTML=
+        `<input type="checkbox" id="${id}">`+
+        `<div class="q-main">`+
+          `<label for="${id}"></label>`+
+          `<button type="button" class="note-toggle">+ Add note</button>`+
+          `<div class="note-box"><textarea placeholder="Details, who's responsible, follow-up..."></textarea></div>`+
+        `</div>`+
+        `<button type="button" class="flag-btn" title="Flag for follow-up" aria-pressed="false">${FLAG_SVG}</button>`;
+      li.querySelector('label').textContent=q;
+      const cb=li.querySelector('input');
+      const flagBtn=li.querySelector('.flag-btn');
+      const noteToggle=li.querySelector('.note-toggle');
+      const noteBox=li.querySelector('.note-box');
+      const textarea=li.querySelector('textarea');
+
+      cb.checked=e.c;
+      li.classList.toggle('done', e.c);
+      flagBtn.classList.toggle('active', e.f);
+      flagBtn.setAttribute('aria-pressed', e.f ? 'true':'false');
+      textarea.value=e.n||'';
+      if(e.n){ noteToggle.textContent='Note'; noteToggle.classList.add('has-note'); noteBox.classList.add('open','has-note'); }
+
+      // Checkbox 'change' is the single source of truth for check state,
+      // whether triggered by the checkbox itself, its label, or a row click below.
+      cb.addEventListener('change', ()=>{
+        e.c=cb.checked; persist();
+        li.classList.toggle('done', cb.checked);
+        updateSection(secObj);
+        updateOverall();
+      });
+
+      // Clicking anywhere on the row (but not an already-interactive control)
+      // toggles the checkbox via its native click, so label/checkbox behavior
+      // and this shortcut never fight each other.
+      li.addEventListener('click', ev=>{
+        if(ev.target.closest('label, input, .flag-btn, .note-toggle, .note-box')) return;
+        cb.click();
+      });
+
+      flagBtn.addEventListener('click', ev=>{
+        ev.stopPropagation();
+        e.f=!e.f; persist();
+        flagBtn.classList.toggle('active', e.f);
+        flagBtn.setAttribute('aria-pressed', e.f ? 'true':'false');
+        li.classList.toggle('flagged', e.f);
+        updateOverall();
+      });
+      li.classList.toggle('flagged', e.f);
+
+      noteToggle.addEventListener('click', ev=>{
+        ev.stopPropagation();
+        noteBox.classList.toggle('open');
+        if(noteBox.classList.contains('open')) textarea.focus();
+      });
+      textarea.addEventListener('click', ev=>ev.stopPropagation());
+      textarea.addEventListener('input', ()=>{
+        e.n=textarea.value; persist();
+        const has=!!e.n.trim();
+        noteToggle.textContent=has ? 'Note' : '+ Add note';
+        noteToggle.classList.toggle('has-note', has);
+        noteBox.classList.toggle('has-note', has);
+      });
+
+      list.appendChild(li);
+      rows.push({li,cb});
+    });
+
+    grid.appendChild(node);
+
+    // Quick-nav chip
+    const chip=document.createElement('button');
+    chip.type='button';
+    chip.className='nav-chip';
+    chip.innerHTML=`<span class="dot"></span><span class="label"></span>`;
+    chip.querySelector('.label').textContent=section.title;
+    chip.addEventListener('click', ()=>{
+      details.open=true;
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    quickNav.appendChild(chip);
+
+    const secObj={card,details,bar,countEl,chip,rows};
+    sectionEls.push(secObj);
+    updateSection(secObj);
+  });
+
+  document.getElementById('countTotal').textContent=total;
+
+  function updateSection(sec){
+    const checked=sec.rows.filter(r=>r.cb.checked).length;
+    const n=sec.rows.length;
+    const complete=n>0 && checked===n;
+    sec.countEl.textContent=complete ? 'All complete ✓' : `${checked} of ${n} complete`;
+    sec.countEl.classList.toggle('is-complete', complete);
+    sec.bar.style.width=(n?Math.round((checked/n)*100):0)+'%';
+    sec.chip.classList.toggle('complete', complete);
+  }
+
+  function updateOverall(){
+    const checked=sectionEls.reduce((sum,s)=>sum+s.rows.filter(r=>r.cb.checked).length,0);
+    document.getElementById('countChecked').textContent=checked;
+    const pct=total?checked/total:0;
+    document.getElementById('ringFill').style.strokeDashoffset=(RING_CIRCUMFERENCE*(1-pct)).toFixed(1);
+
+    const ringWrap=document.getElementById('ringWrap');
+    const complete = total>0 && checked===total;
+    ringWrap.classList.toggle('complete', complete);
+    document.getElementById('ringLabel').textContent = complete ? 'all complete' : 'complete';
+
+    const flaggedTotal=Object.keys(saved).filter(id=>saved[id].f).length;
+    const flagEl=document.getElementById('flaggedCount');
+    if(flaggedTotal>0){
+      flagEl.hidden=false;
+      flagEl.textContent=`${flaggedTotal} flagged`;
+    } else {
+      flagEl.hidden=true;
+    }
+  }
+  updateOverall();
+
+  // ---- Expand / collapse ----
+  document.getElementById('expandAll').addEventListener('click',()=>{
+    sectionEls.forEach(s=>s.details.open=true);
+  });
+  document.getElementById('collapseAll').addEventListener('click',()=>{
+    sectionEls.forEach(s=>s.details.open=false);
+  });
+
+  // ---- Reset ----
+  document.getElementById('resetAll').addEventListener('click',()=>{
+    if(!confirm('Clear all checked answers, flags, and notes? This cannot be undone.')) return;
+    saved={};
+    persist();
+    sectionEls.forEach(sec=>{
+      sec.rows.forEach(r=>{
+        r.cb.checked=false;
+        r.li.classList.remove('done','flagged');
+        r.li.querySelector('.flag-btn').classList.remove('active');
+        r.li.querySelector('.flag-btn').setAttribute('aria-pressed','false');
+        const noteToggle=r.li.querySelector('.note-toggle');
+        const noteBox=r.li.querySelector('.note-box');
+        r.li.querySelector('textarea').value='';
+        noteToggle.textContent='+ Add note';
+        noteToggle.classList.remove('has-note');
+        noteBox.classList.remove('open','has-note');
+      });
+      updateSection(sec);
+    });
+    updateOverall();
+  });
+
+  // ---- Print ----
+  document.getElementById('printBtn').addEventListener('click',()=>{
+    const wasOpen=sectionEls.map(s=>s.details.open);
+    sectionEls.forEach(s=>s.details.open=true);
+    window.print();
+    // restore after the print dialog closes (most browsers fire this synchronously after)
+    setTimeout(()=>{ sectionEls.forEach((s,i)=>s.details.open=wasOpen[i]); }, 300);
+  });
+})();
+</script>
+</body>
+</html>
