@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sanitary Sewer System Questionnaire | OMAG</title>
+<title>Questions Every Public Works Director Should Know | OMAG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -52,13 +52,15 @@
   }
   .header-inner{
     max-width:1080px;margin:0 auto;
-    padding:20px 20px 16px;
+    padding:24px 20px 20px;
   }
-  .logo{height:30px;width:auto;display:block;margin-bottom:14px;filter:invert(1);}
+  .logo{height:30px;width:auto;display:block;margin-bottom:16px;filter:invert(1);}
   .eyebrow-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .kicker{color:var(--navy);font-weight:700;font-size:13px;letter-spacing:.01em}
-  h1{margin:2px 0 0;font-size:clamp(22px,3.4vw,30px);line-height:1.2;font-weight:800;color:var(--ink)}
-  .subtitle{margin:4px 0 0;color:var(--muted);font-size:14.5px;max-width:56ch}
+  h1{margin:4px 0 0;font-size:clamp(22px,3.4vw,30px);line-height:1.2;font-weight:800;color:var(--ink)}
+  .tagline{margin:5px 0 0;font-size:14px;font-style:italic;color:var(--navy)}
+  .subtitle{margin:10px 0 0;color:var(--muted);font-size:14.5px;max-width:56ch}
+  .legend{margin:9px 0 0;color:var(--muted);font-size:12.5px;max-width:56ch}
+  .legend strong{color:var(--ink);font-weight:700}
 
   .progress-ring-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
   .ring-figures{text-align:right}
@@ -78,7 +80,7 @@
   .progress-ring-wrap.complete svg.ring{opacity:0}
   .progress-ring-wrap.complete .ring-figures .small{color:var(--navy);font-weight:700}
 
-  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
   .btn{
     appearance:none;border:1px solid var(--line);cursor:pointer;font-weight:600;
     border-radius:var(--radius);padding:9px 14px;background:var(--surface);color:var(--ink);
@@ -180,6 +182,22 @@
   .flag-btn svg{fill:currentColor;stroke:none}
   .flag-btn:not(.active) svg{fill:none;stroke:currentColor;stroke-width:2}
 
+  .review-summary{max-width:1080px;margin:22px auto 0;padding:0 20px}
+  .review-inner{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    border-left:4px solid var(--warn);padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .review-inner h2{margin:0;font-size:16.5px;font-weight:700;color:var(--ink)}
+  .review-empty{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+  .review-empty strong{color:var(--ink);font-weight:700}
+  #reviewGroups{margin-top:10px}
+  .review-group{margin-top:14px}
+  .review-group:first-child{margin-top:14px}
+  .review-group h3{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--navy-dark)}
+  .review-group ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .review-group li{font-size:13.5px;line-height:1.5;color:var(--ink)}
+  .review-note{color:var(--muted);font-style:italic}
+
   footer{
     max-width:1080px;margin:8px auto 60px;text-align:center;color:var(--muted);
     padding:0 20px;font-size:13px;line-height:1.6;
@@ -191,6 +209,7 @@
     header{position:static;box-shadow:none}
     .toolbar, .progress-ring-wrap{display:none!important}
     .logo{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .review-inner{border-left-color:#999;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
     main{padding:0 12px}
     article.card{box-shadow:none;border-color:#ccc;break-inside:avoid;margin-bottom:10px}
     details{display:block!important}
@@ -217,9 +236,10 @@
     <img class="logo" src="https://images.squarespace-cdn.com/content/v1/573365789f726693272dc91a/1464015851658-UPPH0RIFUZU3X8ZIDRQT/OMAG+no+Swoosh+inverted.png?format=1500w" alt="OMAG" />
     <div class="eyebrow-row">
       <div>
-        <span class="kicker">OMAG Utility Readiness Toolkit</span>
         <h1>Sanitary Sewer System Questionnaire</h1>
+        <p class="tagline">Questions Every Public Works Director Should Know</p>
         <p class="subtitle">Work through each section to see how prepared your system is for daily operations — and where the gaps in your risk exposure are.</p>
+        <p class="legend">Answer each question <strong>Yes</strong>, <strong>No</strong>, or <strong>Not sure</strong>. Use the flag to mark anything that needs follow-up, and add a note for details.</p>
       </div>
       <div class="progress-ring-wrap" id="ringWrap">
         <div class="ring-outer">
@@ -253,6 +273,14 @@
 
 <main>
   <section class="grid" id="grid"></section>
+
+  <section class="review-summary">
+    <div class="review-inner">
+      <h2>Areas to review</h2>
+      <p class="review-empty" id="reviewEmpty">Nothing to review yet — questions you mark <strong>No</strong> will be grouped here by section.</p>
+      <div id="reviewGroups" hidden></div>
+    </div>
+  </section>
 </main>
 
 <footer>With exceptional service, we protect public interest by efficiently managing and mitigating risk for Oklahoma municipalities.</footer>
@@ -388,6 +416,7 @@
           paintAnswer();
           updateSection(secObj);
           updateOverall();
+          renderReviewSummary();
         });
       });
 
@@ -409,6 +438,7 @@
         noteToggle.textContent=has ? 'Note' : '+ Add note';
         noteToggle.classList.toggle('has-note', has);
         noteBox.classList.toggle('has-note', has);
+        if(e.a==='no') renderReviewSummary();
       });
 
       list.appendChild(li);
@@ -417,7 +447,7 @@
 
     grid.appendChild(node);
 
-    const secObj={card,details,bar,countEl,rows};
+    const secObj={card,details,bar,countEl,rows,title:section.title};
     sectionEls.push(secObj);
     updateSection(secObj);
   });
@@ -460,6 +490,45 @@
   }
   updateOverall();
 
+  function renderReviewSummary(){
+    const groupsEl=document.getElementById('reviewGroups');
+    const emptyEl=document.getElementById('reviewEmpty');
+    groupsEl.innerHTML='';
+    let anyNo=false;
+
+    sectionEls.forEach(sec=>{
+      const noRows=sec.rows.filter(r=>r.e.a==='no');
+      if(!noRows.length) return;
+      anyNo=true;
+
+      const group=document.createElement('div');
+      group.className='review-group';
+      const h3=document.createElement('h3');
+      h3.textContent=sec.title;
+      group.appendChild(h3);
+
+      const ul=document.createElement('ul');
+      noRows.forEach(r=>{
+        const li=document.createElement('li');
+        li.textContent=r.li.querySelector('.q-text').textContent;
+        const note=(r.e.n||'').trim();
+        if(note){
+          const span=document.createElement('span');
+          span.className='review-note';
+          span.textContent=' — '+note;
+          li.appendChild(span);
+        }
+        ul.appendChild(li);
+      });
+      group.appendChild(ul);
+      groupsEl.appendChild(group);
+    });
+
+    emptyEl.hidden=anyNo;
+    groupsEl.hidden=!anyNo;
+  }
+  renderReviewSummary();
+
   // ---- Expand / collapse ----
   document.getElementById('expandAll').addEventListener('click',()=>{
     sectionEls.forEach(s=>s.details.open=true);
@@ -491,6 +560,7 @@
     });
     persist();
     updateOverall();
+    renderReviewSummary();
   });
 
   // ---- Print ----
